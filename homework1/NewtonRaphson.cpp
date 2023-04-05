@@ -20,5 +20,5 @@ int main()
                            [](double x)
                            { return 2.0 * x; },
                            10.0);
-    std::cout << "The root of the function is: " << result << std::endl;
+    std::cout << "The squareroot of the function is: " << result << std::endl;
 }
