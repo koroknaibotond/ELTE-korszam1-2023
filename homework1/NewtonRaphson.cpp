@@ -4,7 +4,7 @@
 template <typename F, typename D, typename T> // creating the template of the Newton-Raphson iteration
 T Newton(F f, D df, T x0)
 {
-    int iter_num = 10; // number of repeats which i though would be more than enough to give a good result for the squareroot.
+    int iter_num = 10; // number of repeats which i though would be more than enough to give a good result for the square root.
     for (int i = 0; i < iter_num; ++i)
     {
         T x1 = x0 - f(x0) / df(x0);
