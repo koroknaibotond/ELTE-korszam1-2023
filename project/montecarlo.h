@@ -1,6 +1,5 @@
 #include <iostream>
 #include <random>
-#include <functional>
 #include <cmath>
 
 // Monte Carlo integrátor 3D-s függvényekhez
