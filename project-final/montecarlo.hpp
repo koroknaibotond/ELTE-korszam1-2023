@@ -16,11 +16,11 @@ private:
 
 public:
     template <typename Func, typename Dom>
-    MonteCarlo(Func integrand, Dom domain, double xmin, double xmax, double ymin, double ymax, double zmin, double zmax, int samples = 1e06)
+    MonteCarlo(Func integrand, Dom domain, double xmin, double xmax, double ymin, double ymax, double zmin, double zmax, int samples = 1e6)
         : gen(rd()), distributionx(xmin, xmax), distributiony(ymin, ymax), distributionz(zmin, zmax)
     {
         result = integrate(integrand, domain, samples);
-        controlvalue = control(integrand, domain);
+        controlvalue = control(integrand);
     }
 
     double getResult() const
@@ -38,6 +38,7 @@ private:
     double integrate(Func integrand, Dom domain, int samples)
     {
         int indomain = 0;
+        double sum = 0.0;
         for (int i = 0; i < samples; ++i)
         {
             double x = distributionx(gen);
@@ -47,16 +48,20 @@ private:
             if (domain(x, y, z))
             {
                 double value = integrand(x, y, z);
+                sum += value;
                 indomain++;
             }
         }
 
         double volume = (distributionx.max() - distributionx.min()) * (distributiony.max() - distributiony.min()) * (distributionz.max() - distributionz.min());
-        double integral = static_cast<double>(indomain) / static_cast<double>(samples) * volume;
+        /*double integral = static_cast<double>(indomain) / static_cast<double>(samples) * volume;*/
+        std::cout << "Montecarlo sum:" << sum << std::endl; // tesztelés
+
+        double integral = sum / samples / 1000 * indomain * (1e6 / samples); // 1000-es szorzó miért?
         return integral;
     }
-    template <typename Func, typename Dom>
-    double control(Func integrand, Dom domain) const
+    template <typename Func>
+    double control(Func integrand)
     {
         double a = distributionx.min();
         double b = distributionx.max();
@@ -77,10 +82,10 @@ private:
             for (int j = 0; j <= n; ++j)
             {
                 double y = c + j * k;
-                for (int k = 0; k <= n; ++k)
+                for (int l = 0; l <= n; ++l)
                 {
-                    double z = e + k * m;
-                    if (domain(x, y, z))
+                    double z = e + l * m;
+                    if (x * x + y * y + z * z < 16.0)
                     {
                         double value = integrand(x, y, z);
                         sum += value;
@@ -91,6 +96,7 @@ private:
 
         double volume = (b - a) * (d - c) * (f - e);
         double integral = sum * (h * k * m);
+        std::cout << "Hagyományos sum:" << sum << std::endl; // tesztelés
         return integral;
     }
 };
