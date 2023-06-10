@@ -13,7 +13,7 @@ int main()
     matrixdefault.print();
     std::cout << '\n';
     std::cout << "A Copy konstruktór mátrixa:" << std::endl;
-    matrixcopy.print(); // mindkettő szépen megírodik
+    matrixcopy.print();
 
     std::cout << '\n';
     Matrix<int> movematrix(std::move(matrixcopy)); // ezzel a lépéssel matrixcopyt megszűntetem.
@@ -35,12 +35,11 @@ int main()
     std::cout << "A matrixtest11(2,2) értéke így = " << value11 << std::endl;
 
     std::cout << '\n';
-    std::cout << "összeadás tesztelése:" << std::endl; // a = operátor tesztelésnél használatos mátrixokat adtam össze
+    std::cout << "összeadás tesztelése:" << std::endl;
     Matrix<int> sum = matrixtest1 + matrixtest2;
     sum.print();
-    // A hibát is kiprobáltam és megjelnet a hiba üzenet, csak kivettem, mert az indexelés következtében segmentation fault is fellépett.
     std::cout << '\n';
-    std::cout << "kivonás tesztelése:" << std::endl; // a = operátor tesztelésnél használatos mátrixokat adtam össze
+    std::cout << "kivonás tesztelése:" << std::endl;
 
     Matrix<int> matrixdiff1(2, 2, datas);
     Matrix<int> matrixtdiff2(2, 2, datas2);

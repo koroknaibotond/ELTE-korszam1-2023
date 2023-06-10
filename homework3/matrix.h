@@ -7,7 +7,7 @@ class Matrix
 {
 private:
     std::vector<std::vector<T>> data; // 2D vektor az mátrix tárolására
-    int rows;                         // elmentem private-ba a sorok és oszlpok számát
+    int rows;                         // sorok és oszlopok száma
     int cols;
 
 public:
@@ -16,23 +16,23 @@ public:
     {
     }
 
-    Matrix(Matrix const &cpy) // copy konstruktor
-        : data(cpy.data), rows(cpy.rows), cols(cpy.cols)
+    Matrix(Matrix const &cpy)                            // copy konstruktor
+        : data(cpy.data), rows(cpy.rows), cols(cpy.cols) // A tárolt számok, valamint sorok és oszlopok számának másolása.
     {
     }
 
-    Matrix(Matrix &&mv) // move szemantika
-        : data(std::move(mv.data)), rows(mv.rows), cols(mv.cols)
+    Matrix(Matrix &&mv)                                          // move konstruktor
+        : data(std::move(mv.data)), rows(mv.rows), cols(mv.cols) // itt a másolás után az eredeti megszűnik
     {
-        mv.rows = 0;
+        mv.rows = 0; // eredetei sorait és oszlopait is kinullázom
         mv.cols = 0;
     }
 
     Matrix<T> &operator=(Matrix<T> const &cpy) // sima verzió
     {
-        if (this != &cpy)
+        if (this != &cpy) // Csak akkor van szükség az elemek másolására, ha eredetileg nem egyeik az = két oldalán szereplő mátrix.
         {
-            data = cpy.data;
+            data = cpy.data; // meg történnek az adatok átmásolásai
             rows = cpy.rows;
             cols = cpy.cols;
         }
@@ -72,18 +72,18 @@ public:
     //+ operátor
     Matrix<T> operator+(const Matrix<T> &other) const // klasszikus verzió
     {
-        if (rows != other.rows or cols != other.cols)
+        if (rows != other.rows or cols != other.cols) // Ellenőrzöm, hogy egyezik-e a sorok és oszlopok száma a két mátrix esetén.
         {
-            std::cout << ("Dimension mismatch.");
+            std::cout << ("Dimenzió hiba!");
         }
 
         Matrix<T> sum(rows, cols);
 
-        for (int i = 0; i < rows; ++i)
+        for (int i = 0; i < rows; ++i) // két for ciklussal végig futok a mátrixon
         {
             for (int j = 0; j < cols; ++j)
             {
-                sum.data[i][j] = data[i][j] + other.data[i][j];
+                sum.data[i][j] = data[i][j] + other.data[i][j]; // összeadom az értékeket
             }
         }
 
@@ -94,7 +94,7 @@ public:
     {
         if (rows != other.rows or cols != other.cols)
         {
-            std::cout << ("Dimension mismatch.");
+            std::cout << ("Dimenzió hiba!");
         }
 
         for (int i = 0; i < rows; ++i)
@@ -110,9 +110,9 @@ public:
     //- operátor
     Matrix<T> operator-(const Matrix<T> &other) const // klasszikus verzió
     {
-        if (rows != other.rows or cols != other.cols)
+        if (rows != other.rows or cols != other.cols) // dimenzió ellenőrzés
         {
-            std::cout << ("Dimension mismatch.");
+            std::cout << ("Dimenzió hiba!");
         }
 
         Matrix<T> diff(rows, cols);
@@ -121,7 +121,7 @@ public:
         {
             for (int j = 0; j < cols; ++j)
             {
-                diff.data[i][j] = data[i][j] - other.data[i][j];
+                diff.data[i][j] = data[i][j] - other.data[i][j]; // Kivonások elvégzése
             }
         }
 
@@ -139,7 +139,7 @@ public:
         {
             for (int j = 0; j < cols; ++j)
             {
-                other.data[i][j] -= data[i][j];
+                other.data[i][j] -= data[i][j]; // A +operátorhoz hasonlóan a különbségeket egyikbe mentettem, majd mozgattam.
             }
         }
 
@@ -156,7 +156,7 @@ public:
         {
             for (int j = 0; j < cols; ++j)
             {
-                result.data[i][j] = data[i][j] * scalar;
+                result.data[i][j] = data[i][j] * scalar; // A mátrix összes tagját megszorztam a megadott skalárral.
             }
         }
 
@@ -174,7 +174,7 @@ public:
             }
         }
 
-        return data = std::move(data);
+        return data = std::move(data); // itt szintén, csak egy új mátrix létrehozása helyett az eredetibe mozgattam a felszorzott értékeket.
     }
 
     // skalárral osztás:
@@ -185,7 +185,7 @@ public:
 
         for (int i = 0; i < rows; ++i)
         {
-            for (int j = 0; j < cols; ++j)
+            for (int j = 0; j < cols; ++j) // Minden tagot leosztottam a megadott skalárral
             {
                 result.data[i][j] = data[i][j] / scalar;
             }
@@ -201,7 +201,7 @@ public:
         {
             for (int j = 0; j < cols; ++j)
             {
-                data[i][j] /= scalar;
+                data[i][j] /= scalar; // Az eredmény kiszámolása után a szokásos mozgatást végeztem el.
             }
         }
 
@@ -213,7 +213,7 @@ public:
     {
         if (cols != other.rows)
         {
-            std::cout << ("Dimensions mismatch.");
+            std::cout << ("Dimenzió hiba!");
         }
 
         Matrix<T> result(rows, other.cols); // létrehozunk egy mátrixot a szorzásnak megfelelő mérettel
@@ -223,7 +223,7 @@ public:
             for (int j = 0; j < other.cols; ++j) // iletve a második mátrix oszlopain
             {
                 T sum = 0;
-                for (int k = 0; k < cols; ++k)
+                for (int k = 0; k < cols; ++k) // A harmadik for ciklust arra használjuk, hogy az első mátrix sorain belüli, míg a második mátrix oszlopain belüli elemeken végig lépkedjünk.
                 {
                     sum += data[i][k] * other.data[k][j];
                 }
@@ -233,15 +233,12 @@ public:
 
         return result;
     }
-    /*
-    Miután kijelöltük pl az 1 sor első oszlopot, a harmadik for ciklussal végiglépkedünk az első mátrix első sorának elemein
-    és felösszegezzük a második mátrix első oszlopának elemeivel, majd haladunk szépen tovább
-    */
+
     Matrix<T> matrixProduct(const Matrix<T> &&other)
     {
         if (cols != other.rows)
         {
-            std::cout << ("Dimensions mismatch.");
+            std::cout << ("Dimezió hiba!");
         }
 
         Matrix<T> result(rows, other.cols); // létrehozunk egy mátrixot a szorzásnak megfelelő mérettel
@@ -259,16 +256,16 @@ public:
             }
         }
 
-        return data = std::move(result);
+        return data = std::move(result); // Minden pontosan ugyan az, csak az adatok, csak .matrixProduct() kifejezés bal oldalán található mátrixba lesznek moveolva az eredmények
     }
 
-        Matrix(int numRows, int numCols, const std::vector<T> &values)
+    Matrix(int numRows, int numCols, const std::vector<T> &values)
         : data(numRows, std::vector<T>(numCols)), rows(numRows), cols(numCols)
     {
         int index = 0;
         for (int i = 0; i < rows; ++i)
         {
-            for (int j = 0; j < cols; ++j)
+            for (int j = 0; j < cols; ++j) // soronként töltjük fel.
             {
                 data[i][j] = values[index++];
             }
@@ -292,8 +289,8 @@ public:
             for (const auto &element : row) // valamint annak az
             {
                 std::cout << element << " ";
-            } // szóközökkel és sortörésekkel kiprinteljük.
-            std::cout << std::endl;
+            }                       // szóközök
+            std::cout << std::endl; // sortörések elhelyezése.
         }
     }
 };
