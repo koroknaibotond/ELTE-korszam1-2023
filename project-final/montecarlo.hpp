@@ -8,7 +8,7 @@ private:
     std::random_device rd;
     std::mt19937 gen; // a randomszám generáláshoz egy Mersenne Twister típusú véletlenszám-generátort használtam
     std::uniform_real_distribution<double> distributionx;
-    std::uniform_real_distribution<double> distributiony; // A koordinátákhoz a megadott határok között egyenletesen elosztott véleletlenszámokat generáltam
+    std::uniform_real_distribution<double> distributiony; // A koordinátákhoz a megadott határok között egyenletesen elosztott véletlenszámokat generáltam
     std::uniform_real_distribution<double> distributionz;
     double result;       // Ebbe a változóban tároljuk az Montecarlo integrálás eredményét
     double controlvalue; // Ebben pedig az ellenőrzés során kiszámolt értéket
@@ -17,7 +17,7 @@ public:
     template <typename Func, typename Dom>
     MonteCarlo(Func integrand, Dom domain, double xmin, double xmax, double ymin, double ymax, double zmin, double zmax, int samples = 0.5e6)
         : gen(rd()), distributionx(xmin, xmax), distributiony(ymin, ymax), distributionz(zmin, zmax)
-    { // Ebben a konstuktoban adhatjuk meg az integrandust, az integrálási tartományt, és a tartományt magába foglaló téglalap határait
+    { // Ebben a konstruktoban adhatjuk meg az integrandust, az integrálási tartományt, és a tartományt magába foglaló téglalap határait
       // valamint inicializáljuk randomszám generátort, és az eloszlásokat a megfelelő határokkal
         try
         {
